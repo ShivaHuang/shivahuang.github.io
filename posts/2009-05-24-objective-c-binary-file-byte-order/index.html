@@ -64,6 +64,10 @@
             
             
             
+            <div class="article-comment-link-wrap">
+                <a href="/posts/2009-05-24-objective-c-binary-file-byte-order/#disqus_thread" class="article-comment-link">Comments</a>
+            </div>
+            
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>要從二進位檔案中讀入數值，其中一個會遇到的問題就是 Little-endian 和 Big-endian，這和 CPU 的種類有關。Intel 系列的 x86 CPU 使用的是 Little-endian，而 PowerPC、ARM 等的 CPU 則是採用 Big-endian。endian 不同的問題，在以前 PPC 的時代算是相當重要，後來改用 Intel CPU 之後重要性就下降了許多，不過現在因為 iPhone 採用的 ARM 又是 Big-endian，所以這問題的重要性又大幅提升了，尤其許多新手設計師，之前可能根本沒碰過非 Intel 的平台，根本沒考慮過這問題，於是寫出來的程式就會讀到一堆詭異的數字。</p>
@@ -122,6 +126,27 @@ hostFloat = CFConvertFloat32SwappedToHost(littleFloat);
 
 </article>
 
+        
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "shivahuangtalks" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
         
     </section>
     <footer id="footer">
