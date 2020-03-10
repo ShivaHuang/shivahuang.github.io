@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>iOS on Shiva Huang Talks</title>
-    <link>https://shivahuang.cocoazen.com/tags/ios/</link>
+    <link>https://shivahuang.github.io/tags/ios/</link>
     <description>Recent content in iOS on Shiva Huang Talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Mon, 04 Jan 2016 16:21:00 +0800</lastBuildDate>
     
-	<atom:link href="https://shivahuang.cocoazen.com/tags/ios/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://shivahuang.github.io/tags/ios/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>解決 CocoaPods 因為 Build Settings 中 Build Active Architecture Only 設為 YES 造成的 build error</title>
-      <link>https://shivahuang.cocoazen.com/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/</link>
+      <link>https://shivahuang.github.io/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/</link>
       <pubDate>Mon, 04 Jan 2016 16:21:00 +0800</pubDate>
       
-      <guid>https://shivahuang.cocoazen.com/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/</guid>
+      <guid>https://shivahuang.github.io/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/</guid>
       <description>CocoaPods 很方便，不過它有個設定我實在搞不懂，就是預設會把 Pods project 的 Build Settings &amp;gt; Build Active Architecture Only 在 Debug 模式下設為 YES，導致每次執行完 pod install 之後就會發生編譯錯誤，要手動把</description>
     </item>
     
     <item>
       <title>UITableView 的分隔線消失解法</title>
-      <link>https://shivahuang.cocoazen.com/posts/2014-08-25-solution-of-uitableview-separator-disappear/</link>
+      <link>https://shivahuang.github.io/posts/2014-08-25-solution-of-uitableview-separator-disappear/</link>
       <pubDate>Mon, 25 Aug 2014 15:35:00 +0800</pubDate>
       
-      <guid>https://shivahuang.cocoazen.com/posts/2014-08-25-solution-of-uitableview-separator-disappear/</guid>
+      <guid>https://shivahuang.github.io/posts/2014-08-25-solution-of-uitableview-separator-disappear/</guid>
       <description>聽說這是 iOS 7 的 bug。 我遇到的狀況就像圖中呈現的，在第二和第三個 cell 中間的分隔線不見了。 在 stackoverflow 查了一下，雖然操作法不太一樣，不過問題的根源應該是</description>
     </item>
     
     <item>
       <title>在 iOS 上 clone 一個 ABRecord</title>
-      <link>https://shivahuang.cocoazen.com/posts/2013-08-18-clone-an-abrecord-on-ios/</link>
+      <link>https://shivahuang.github.io/posts/2013-08-18-clone-an-abrecord-on-ios/</link>
       <pubDate>Sun, 18 Aug 2013 16:15:00 +0800</pubDate>
       
-      <guid>https://shivahuang.cocoazen.com/posts/2013-08-18-clone-an-abrecord-on-ios/</guid>
+      <guid>https://shivahuang.github.io/posts/2013-08-18-clone-an-abrecord-on-ios/</guid>
       <description>在 OSX 中，要建立一個 ABRecord 的副本（clone）可以用 ABRecordCreateCopy 這個 function，但是這個 function 在 iOS 上卻沒有實作，如果要自己做，變成要自己抓出一個個屬性，然</description>
     </item>
     

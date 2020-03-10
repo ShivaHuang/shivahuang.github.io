@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>git on Shiva Huang Talks</title>
-    <link>https://shivahuang.cocoazen.com/tags/git/</link>
+    <link>https://shivahuang.github.io/tags/git/</link>
     <description>Recent content in git on Shiva Huang Talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Tue, 01 Jul 2014 16:02:00 +0800</lastBuildDate>
     
-	<atom:link href="https://shivahuang.cocoazen.com/tags/git/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://shivahuang.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>在 git repo 中保護 API Key 的方法</title>
-      <link>https://shivahuang.cocoazen.com/posts/2014-07-01-protect-api-key-in-git-repo/</link>
+      <link>https://shivahuang.github.io/posts/2014-07-01-protect-api-key-in-git-repo/</link>
       <pubDate>Tue, 01 Jul 2014 16:02:00 +0800</pubDate>
       
-      <guid>https://shivahuang.cocoazen.com/posts/2014-07-01-protect-api-key-in-git-repo/</guid>
+      <guid>https://shivahuang.github.io/posts/2014-07-01-protect-api-key-in-git-repo/</guid>
       <description>在串接各種網路服務的時候，我們會拿到許許多多的 key/token，即使只是要寄個信也需要帳號密碼，不過這些敏感性的資料，極端不建議提交到 repo 中</description>
     </item>
     
     <item>
       <title>重整 Git repo 中的階層關係</title>
-      <link>https://shivahuang.cocoazen.com/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/</link>
+      <link>https://shivahuang.github.io/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/</link>
       <pubDate>Tue, 28 Jan 2014 14:45:00 +0800</pubDate>
       
-      <guid>https://shivahuang.cocoazen.com/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/</guid>
+      <guid>https://shivahuang.github.io/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/</guid>
       <description>一般來說，我們會把專案擺成下面這樣子： Projects/ Proj1/ .git/ proj1_readme.md CVT2HUGO: &amp;gt; ls -la 就是很單純的有個 Projects 目錄，裡面放著所有的專案，然後把 Proj1 做成 git repo。 隨著時間過去，可能</description>
     </item>
     
