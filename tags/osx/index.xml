@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>OSX on Shiva Huang Talks</title>
-    <link>https://shivahuang.github.io/tags/osx/</link>
+    <link>https://shivahuang.cocoazen.com/tags/osx/</link>
     <description>Recent content in OSX on Shiva Huang Talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Fri, 08 Apr 2016 12:39:00 +0800</lastBuildDate>
     
-	<atom:link href="https://shivahuang.github.io/tags/osx/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://shivahuang.cocoazen.com/tags/osx/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Mac OSX 的 PATH 設定與 path_helper</title>
-      <link>https://shivahuang.github.io/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</link>
+      <link>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</link>
       <pubDate>Fri, 08 Apr 2016 12:39:00 +0800</pubDate>
       
-      <guid>https://shivahuang.github.io/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</guid>
+      <guid>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</guid>
       <description>這兩天幫一台舊機器升級開發環境，包含了 rvm，homebrew 等，在用 brew doctor 想確認一下有沒有什麼問題的時候，跳出了一個警告如下： Warning: /usr/bin occurs before /usr/local/bin This means</description>
     </item>
     
