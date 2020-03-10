@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TextMate on Shiva Huang Talks</title>
+    <link>https://shivahuang.cocoazen.com/tags/textmate/</link>
+    <description>Recent content in TextMate on Shiva Huang Talks</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Fri, 22 Nov 2013 15:31:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://shivahuang.cocoazen.com/tags/textmate/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SQL formatter</title>
+      <link>https://shivahuang.cocoazen.com/posts/2013-11-22-sql-formatter/</link>
+      <pubDate>Fri, 22 Nov 2013 15:31:00 +0800</pubDate>
+      
+      <guid>https://shivahuang.cocoazen.com/posts/2013-11-22-sql-formatter/</guid>
+      <description>有時候拿到一些 SQL 很亂，會想要重新整理一下方便閱讀，但是 TextMate 沒有內建 formatter，雖然有找到給 TextMate 用的 formatter bundle，不過已經沒有作用了。打</description>
+    </item>
+    
+  </channel>
+</rss>

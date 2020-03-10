@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>試著在 Virtual PC 7 中安裝 Linux [1] // Shiva Huang Talks</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    
+    
+
+        <meta property="og:title" content="試著在 Virtual PC 7 中安裝 Linux [1]" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2007-10-06-virtual-pc-7-linux-1/" />
+    
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.67.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/tags/">Tags</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">試著在 Virtual PC 7 中安裝 Linux [1]</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/posts/2007-10-06-virtual-pc-7-linux-1/" class="article-date">
+                <time datetime='2007-10-07T03:55:00.000&#43;08:00' itemprop="datePublished">2007-10-07</time>
+            </a>
+            
+            
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>因為這學期修了一門 Linux 驅動程式開發，所以想在 VPC 中安裝一套 Linux 來用，沒想到真是困難重重啊&hellip;</p>
+<p>先說明我的需求：因為只是要在上面練習寫 driver，所以 GUI 就省了，只需要有 ssh server 能夠登入就好。<br>
+我的配備則是 PowerBook G4 1.67GHz，記憶體有 2G，使用 Virtual PC 7.03。</p>
+<p>首先先用了我最熟悉的 Mandriva。下載了 Mandriva 2007.1 來裝，輕鬆愉快的安裝好，只花了大約半小時多，然後開機，結果一直停在Uncompressing Linux&hellip; Ok, booting the kernel.<a href="http://blog.lifestyle.idv.tw/uploaded_images/Mandriva_2007.1_no_respond-754432.png"><img src="http://blog.lifestyle.idv.tw/uploaded_images/Mandriva_2007.1_no_respond-754428.png" alt=""></a>不會動&hellip;它就是不會動&hellip;</p>
+<p>於是我轉向 Mandriva 2007.0，結果相同&hellip;它還是不會動。</p>
+<p>因此我腦筋動到了最近幾年很紅的 Ubuntu 上，抓來試試，先試了 7.04，沒想到在安裝的時候就遇到問題&hellip;看起來是螢幕設定有問題，安裝畫面大概只能看到一半&hellip;<br>
+<a href="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_install_out_of_range-735618.png"><img src="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_install_out_of_range-735616.png" alt=""></a><br>
+我只好摸黑進行，一直到了安裝 base system 的時候，我看到進度列一直停留在 6%，停了起碼有 20 分鐘以上，只好放棄重新啟動。<a href="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_install_hung-797681.png"><img src="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_install_hung-797679.png" alt=""></a><br>
+經過了重複的試驗之後，我發現在 Ubuntu 安裝畫面一開始的地方可以設定 VGA，改成 800x600x16 之後，突然，安裝畫面正常了，我可以看到整個畫面了，也才發現原來進度列雖然停在 6％ 但是它還是有在跑的！接下來就是耐心的考驗了&hellip;.在經過了 2.5 小時的安裝之後，系統終於安裝完畢，但是第一次啟動就看到如下的畫面&hellip;<a href="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_kernel_panic-790560.png"><img src="http://blog.lifestyle.idv.tw/uploaded_images/Ubuntu_7.04_kernel_panic-790558.png" alt=""></a>Kernel 噴了兩行 CPU 的暫存器內容&hellip;掛了&hellip;</p>
+<p>這樣不行，請出 Google 大神，在網路上翻啊翻的，看到有人說 Windows 版的 Virtual PC 2004 差不多就等於 Mac 版的 VPC 7，安裝的資料可以參考這個網站：<a href="http://vpc.visualwin.com/index.aspx">What Works and What Doesn&rsquo;t in Microsoft Visual PC 2004</a>。在查閱了裡面的資料之後，我確定了目前應該沒有人安裝成功我試的這幾個 Linux Distro&hellip;</p>
+<p>退而求其次，我看到目前為止 Ubuntu 可以安裝的最新版本是 Ubuntu 6.06，就決定是你了吧，不過我實在是沒力在等下去，決定把電腦放下載，先去睡了。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3>Contents</h3>
+            <nav id="TableOfContents"></nav>
+        </div>
+        
+        
+
+        
+
+
+        
+    </div>
+    <nav id="article-nav">
+    
+    <a href="/posts/2007-10-25-iphoneipod-touch/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            iPhone/iPod Touch 軟體開發
+        </div>
+    </a>
+    
+    
+    <a href="/posts/2007-09-03-cocoaheadstw/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">第零屆 CocoaHeads.tw 起跑！&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Shiva Huang Talks
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

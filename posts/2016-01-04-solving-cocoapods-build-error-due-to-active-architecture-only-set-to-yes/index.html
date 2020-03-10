@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>解決 CocoaPods 因為 Build Settings 中 Build Active Architecture Only 設為 YES 造成的 build error // Shiva Huang Talks</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    
+    
+
+        <meta property="og:title" content="解決 CocoaPods 因為 Build Settings 中 Build Active Architecture Only 設為 YES 造成的 build error" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/" />
+    
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.67.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/tags/">Tags</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">解決 CocoaPods 因為 Build Settings 中 Build Active Architecture Only 設為 YES 造成的 build error</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/" class="article-date">
+                <time datetime='2016-01-04T16:21:00.000&#43;08:00' itemprop="datePublished">2016-01-04</time>
+            </a>
+            
+            
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>CocoaPods 很方便，不過它有個設定我實在搞不懂，就是預設會把 <code>Pods</code> project 的 <strong>Build Settings &gt; Build Active Architecture Only</strong> 在 <code>Debug</code> 模式下設為 <code>YES</code>，導致每次執行完 <code>pod install</code> 之後就會發生編譯錯誤，要手動把這個選項刪掉（回復預設值 <code>NO</code>）或直接改成 <code>NO</code> 才行。</p>
+<p>本來這種事其實也沒什麼，反正不是天天跑 <code>pod install</code>，但是久了還是很煩。找了一下網路，一般的解法是利用 <code>post_install</code> 這個 method，在裡面把每個 target 的 <code>Build Active Architecture Only</code> 設為 <code>NO</code>。</p>
+<p>在 <code>Podfile</code> 中加入下面這段：（Ref: <a href="http://samwize.com/2014/05/15/resolving-cocoapods-build-error-due-to-targets-building-for-only-active-architecture/">http://samwize.com/2014/05/15/resolving-cocoapods-build-error-due-to-targets-building-for-only-active-architecture/</a>）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
+post_install <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>installer_representation<span style="color:#f92672">|</span>
+    installer_representation<span style="color:#f92672">.</span>pods_project<span style="color:#f92672">.</span>targets<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>target<span style="color:#f92672">|</span>
+        target<span style="color:#f92672">.</span>build_configurations<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>config<span style="color:#f92672">|</span>
+            config<span style="color:#f92672">.</span>build_settings<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ONLY_ACTIVE_ARCH&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;NO&#39;</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>不過這段是把 project 下的每個 target 中的 <code>Build Active Architecture Only</code> 設為 <code>NO</code>，事實上只要改 project 的設定，把 CocoaPods 自己加進去的 <code>Build Active Architecture Only = YES</code> 拿掉就可以了，所以修改如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
+post_install <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>installer_representation<span style="color:#f92672">|</span>
+    installer_representation<span style="color:#f92672">.</span>pods_project<span style="color:#f92672">.</span>build_configurations<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>configuration<span style="color:#f92672">|</span>
+        configuration<span style="color:#f92672">.</span>build_settings<span style="color:#f92672">.</span>delete <span style="color:#e6db74">&#39;ONLY_ACTIVE_ARCH&#39;</span>
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div>
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3>Contents</h3>
+            <nav id="TableOfContents"></nav>
+        </div>
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/ios">iOS
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/cocoapods">Cocoapods
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    <nav id="article-nav">
+    
+    <a href="/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            Mac OSX 的 PATH 設定與 path_helper
+        </div>
+    </a>
+    
+    
+    <a href="/posts/2015-02-03-equally-distributes-components-using-auto-layout/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">用 Auto Layout 等距排列元件&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Shiva Huang Talks
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

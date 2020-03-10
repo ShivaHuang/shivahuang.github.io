@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用 Auto Layout 等距排列元件 // Shiva Huang Talks</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    
+    
+
+        <meta property="og:title" content="用 Auto Layout 等距排列元件" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2015-02-03-equally-distributes-components-using-auto-layout/" />
+    
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.67.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/tags/">Tags</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">用 Auto Layout 等距排列元件</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/posts/2015-02-03-equally-distributes-components-using-auto-layout/" class="article-date">
+                <time datetime='2015-02-03T23:16:00.000&#43;08:00' itemprop="datePublished">2015-02-03</time>
+            </a>
+            
+            
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>本來以為 Auto Layout 可以用類似 <code>@&quot;|-[view1(viewWidth)]-space-[view2(viewWidth)]-space-[view3(viewWidth)]-|&quot;</code> 這樣的語法自動把三個等寬的 view 等距排列的，沒想到沒辦法。要達到這個效果的話，一個做法是把每個 space 真的塞一個空白的 view 進去，調整這個 view 的寬度，就像 <code>@&quot;|-[view1(viewWidth)]-[space1]-[view2(viewWidth)]-[space2(==space1)]-[view3(viewWidth)]-|&quot;</code> ，但這麼做會生出一堆空白 view，怎麼想都很蠢...另外一條路就是針對每個 view 單獨設定 constraint。</p>
+
+<p>constraint 的建構式長這樣：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objc" data-lang="objc">+ (<span style="color:#66d9ef">instancetype</span>)<span style="color:#a6e22e">constraintWithItem:</span>(<span style="color:#66d9ef">id</span>)view1
+                         <span style="color:#a6e22e">attribute:</span>(NSLayoutAttribute)attr1
+                         <span style="color:#a6e22e">relatedBy:</span>(NSLayoutRelation)relation
+                            <span style="color:#a6e22e">toItem:</span>(<span style="color:#66d9ef">id</span>)view2
+                         <span style="color:#a6e22e">attribute:</span>(NSLayoutAttribute)attr2
+                        <span style="color:#a6e22e">multiplier:</span>(CGFloat)multiplier
+                          <span style="color:#a6e22e">constant:</span>(CGFloat)c</code></pre></div>
+<p>如果我們這樣設定：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objc" data-lang="objc">NSLayoutConstraint <span style="color:#f92672">*</span>constraint <span style="color:#f92672">=</span> [NSLayoutConstraint constraintWithItem:view1
+                                                              attribute:NSLayoutAttributeCenterX
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:superView
+                                                              attribute:NSLayoutAttributeCenterX
+                                                             multiplier:multiplier
+                                                               constant:constant];</code></pre></div>
+<p>就會有如下的效果：</p>
+
+<p><span  class="math">\[view1.centerX = multiplier \times superView.centerX  + constant\]</span></p>
+
+<p>因此我們希望最終得到的公式形式為：</p>
+
+<p><span  class="math">\[view_k.centerX = a_k \times superView.centerX + b_k\]</span></p>
+
+<p>那麼只要知道 \(a_k\) \(b_k\) 的公式，就可以用來設定每個 view 的 constraint。</p>
+
+<p>透過觀察，可以發現幾件事，首先，\(view_0.centerX\) 的位置就是它寬度的一半：</p>
+
+<p><span  class="math">\[\begin{aligned} view_0.centerX &= \frac{1}{2} \cdot view.width \\ &= 0 \cdot superView.centerX + \frac{1}{2} \cdot view.width \end{aligned}\]</span></p>
+
+<p>另外，\(superView\) 的寬度等於 \(superView.centerX\) 的兩倍，也等於 n 倍的 \(view.width\) 加上 (n-1) 倍的間隔 (\(space\))，因此我們可以把 \(space\) 表示如下：</p>
+
+<p><span  class="math">\[\begin{aligned} superView.width &= superView.centerX \times 2 = n \times view.width + (n-1) \times space \\ \Rightarrow space &= \frac{2\cdot{superView.centerX}-n\cdot{view.width}}{n-1} \end{aligned}\]</span></p>
+
+<p>最後，\(view_k.centerX\) 等於 \(view_0.centerX\) 加上 \(k\) 倍的 \(view.width\) 加 \(k\) 倍的 \(space\)：</p>
+
+<p><span  class="math">\[\begin{aligned} view_k.centerX &= view_0.centerX + k \times (view.width + space) \\ &= \frac {1}{2} \cdot view.width + k \cdot view.width + k \cdot (\frac{2\cdot{superView.centerX}-n\cdot{view.width}}{n-1}) \\ &= \frac {2 \cdot k}{n-1} \times superView.centerX + (\frac {1}{2} + k - \frac{n }{n-1} \cdot k) \times view.width \\ &= \frac {2 \cdot k}{n-1} \times superView.centerX + \frac {1} {2} \times (1-\frac {2 \cdot k}{n-1}) \times view.width \end{aligned}\]</span></p>
+
+<p>這時假設</p>
+
+<p><span  class="math">\[a_k = \frac {2}{n-1} \cdot k\]</span></p>
+
+<p>就可以得到</p>
+
+<p><span  class="math">\[\begin{aligned} \Rightarrow view_k.centerX &= \frac {2 \cdot k}{n-1} \times superView.centerX + \frac {1} {2} \times (1-\frac {2 \cdot k}{n-1}) \times view.width \\ &= a_k \times superView.centerX + \frac {1} {2} (1-a_k) \times view.width \end{aligned}\]</span></p>
+
+<p>也就是</p>
+
+<p><span  class="math">\[\begin{aligned} multiplier_k &= \frac {2}{n-1} \cdot k \\ constant_k &= (1-multiplier_k) \times \frac {1} {2} view.width \end{aligned}\]</span></p>
+
+<p>寫成 code 可以用這樣的做法：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objc" data-lang="objc">NSDictionary <span style="color:#f92672">*</span>views <span style="color:#f92672">=</span> NSDictionaryOfVariableBindings(view1, view2, view3, view4, view5, view6);
+NSArray <span style="color:#f92672">*</span>subViews <span style="color:#f92672">=</span> <span style="color:#ae81ff">@[</span>view1, view2, view3, view4, view5, view6<span style="color:#ae81ff">]</span>;
+CGFloat viewWidth <span style="color:#f92672">=</span> <span style="color:#ae81ff">30.0</span>;
+NSDictionary <span style="color:#f92672">*</span>metrics <span style="color:#f92672">=</span> <span style="color:#ae81ff">@{</span><span style="color:#e6db74">@&#34;viewWidth&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">@30</span><span style="color:#ae81ff">}</span>;
+CGFloat multiplier <span style="color:#f92672">=</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">/</span> (subViews.count <span style="color:#f92672">-</span> <span style="color:#ae81ff">1.0</span>);
+CGFloat constantFactor <span style="color:#f92672">=</span> viewWidth <span style="color:#f92672">/</span> <span style="color:#ae81ff">2.0</span>;
+
+[superView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:<span style="color:#e6db74">@&#34;H:|[view1(viewWidth)]-&gt;=0-[view2(viewWidth)]-&gt;=0-[view3(viewWidth)]-&gt;=0-[view4(viewWidth)]-&gt;=0-[view5(viewWidth)]-&gt;=0-[view6(viewWidth)]|&#34;</span>
+                                                                 options:NSLayoutFormatAlignAllTop<span style="color:#f92672">|</span>NSLayoutFormatAlignAllBottom
+                                                                 metrics:metrics
+                                                                   views:views]];
+[superView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:<span style="color:#e6db74">@&#34;V:|[view1(viewWidth)]|&#34;</span>
+                                                                  options:<span style="color:#ae81ff">0</span>
+                                                                  metrics:metrics
+                                                                    views:views]];
+
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; k<span style="color:#f92672">&lt;</span>subViews.count; k<span style="color:#f92672">++</span>) {
+    [superView addConstraint:[NSLayoutConstraint constraintWithItem:subViews[k]
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:superView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:k <span style="color:#f92672">*</span> multiplier
+                                                           constant:(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">-</span> multiplier <span style="color:#f92672">*</span> k) <span style="color:#f92672">*</span> constantFactor]];
+}</code></pre></div>
+<p>但是這種做法會讓內部的 subView 貼緊 superView，呈現 <code>@&quot;|[view1]-[view2]-...-[viewk]|&quot;</code> 的形式。如果希望第一個 subView 和最後一個 subView 與 superView 之間有邊界，呈現 <code>@&quot;|-[view1]-[view2]-...-[viewk]-|&quot;</code> 的形式，用一樣的方式推導，可以算出</p>
+
+<p><span  class="math">\[\begin{aligned} multiplier_k &= \frac {2}{n-1} \cdot k \\ constant_k &= (1-multiplier_k) \times (\frac {1} {2} view.width + margin) \end{aligned}\]</span></p>
+
+<p>code 則改為：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objc" data-lang="objc">NSDictionary <span style="color:#f92672">*</span>views <span style="color:#f92672">=</span> NSDictionaryOfVariableBindings(view1, view2, view3, view4, view5, view6);
+NSArray <span style="color:#f92672">*</span>subViews <span style="color:#f92672">=</span> <span style="color:#ae81ff">@[</span>view1, view2, view3, view4, view5, view6<span style="color:#ae81ff">]</span>;
+CGFloat viewWidth <span style="color:#f92672">=</span> <span style="color:#ae81ff">30.0</span>;
+CGFloat margin <span style="color:#f92672">=</span> <span style="color:#ae81ff">8.0</span>;
+NSDictionary <span style="color:#f92672">*</span>metrics <span style="color:#f92672">=</span> <span style="color:#ae81ff">@{</span><span style="color:#e6db74">@&#34;viewWidth&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">@30</span>, <span style="color:#e6db74">@&#34;margin&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">@8</span><span style="color:#ae81ff">}</span>;
+CGFloat multiplier <span style="color:#f92672">=</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">/</span> (subViews.count <span style="color:#f92672">-</span> <span style="color:#ae81ff">1.0</span>);
+CGFloat constantFactor <span style="color:#f92672">=</span> viewWidth <span style="color:#f92672">/</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">+</span> margin;
+
+[superView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:<span style="color:#e6db74">@&#34;H:|-margin-[view1(viewWidth)]-&gt;=0-[view2(viewWidth)]-&gt;=0-[view3(viewWidth)]-&gt;=0-[view4(viewWidth)]-&gt;=0-[view5(viewWidth)]-&gt;=0-[view6(viewWidth)]-margin-|&#34;</span>
+                                                                 options:NSLayoutFormatAlignAllTop<span style="color:#f92672">|</span>NSLayoutFormatAlignAllBottom
+                                                                 metrics:metrics
+                                                                   views:views]];
+[superView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:<span style="color:#e6db74">@&#34;V:|[view1(viewWidth)]|&#34;</span>
+                                                                  options:<span style="color:#ae81ff">0</span>
+                                                                  metrics:metrics
+                                                                    views:views]];
+
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; k<span style="color:#f92672">&lt;</span>subViews.count; k<span style="color:#f92672">++</span>) {
+    [superView addConstraint:[NSLayoutConstraint constraintWithItem:subViews[k]
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:superView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:k <span style="color:#f92672">*</span> multiplier
+                                                           constant:(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">-</span> multiplier <span style="color:#f92672">*</span> k) <span style="color:#f92672">*</span> constantFactor]];
+}</code></pre></div>
+<p>參考來源：<a href="https://github.com/smileyborg/PureLayout">PureLayout</a>/<a href="https://github.com/smileyborg/PureLayout/blob/master/PureLayout/PureLayout/NSArray%2BPureLayout.m">NSArray+PureLayout.m</a></p>
+
+        </div>
+
+        
+        
+        
+
+        
+
+
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/cocoa">cocoa
+                    </a>
+                </li>
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/autolayout">Autolayout
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
+    </div>
+    <nav id="article-nav">
+    
+    <a href="/posts/2016-01-04-solving-cocoapods-build-error-due-to-active-architecture-only-set-to-yes/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            解決 CocoaPods 因為 Build Settings 中 Build Active Architecture Only 設為 YES 造成的 build error
+        </div>
+    </a>
+    
+    
+    <a href="/posts/2014-08-25-solution-of-uitableview-separator-disappear/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">UITableView 的分隔線消失解法&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Shiva Huang Talks
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

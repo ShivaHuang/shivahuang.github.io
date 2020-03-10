@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cocoa 手勢支援 // Shiva Huang Talks</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    
+    
+
+        <meta property="og:title" content="Cocoa 手勢支援" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2010-04-22-cocoa/" />
+    
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.67.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/tags/">Tags</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">Cocoa 手勢支援</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/posts/2010-04-22-cocoa/" class="article-date">
+                <time datetime='2010-04-22T18:07:00.000&#43;08:00' itemprop="datePublished">2010-04-22</time>
+            </a>
+            
+            
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p>在 Macbook Air 推出之後，Apple 就多了手勢操作這項功能，但是這項功能雖然在 10.5 就有了，不過卻直到 10.6 才在 Apple 
+的 Document 中出現。而要在 10.5 中使用這項功能的話，其實也很簡單，只要實作 10.6 的 Document 裡面出現的幾項 method 
+即可，也就是下面五個 method：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objective-c" data-lang="objective-c">- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">magnifyWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event;
+- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">rotateWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event;
+- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">swipeWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event;
+- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">beginGestureWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event;
+- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">endGestureWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event;
+</code></pre></div><p>不過除非要自己抓取新的手勢，不然主要只要實作 magnifyWithEvent、rotateWithEvent、swipeWithEvent 這三個即可。</p>
+<p>這三個手勢的詳細操作，可以參考 10.6 的 Document，在 10.5 都相容，只有 magnifyWithEvent 要特別處理一下。</p>
+<p>magnifyWithEvent 的標準用法如下（Apple Document）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objective-c" data-lang="objective-c">- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">magnifyWithEvent:</span>(NSEvent <span style="color:#f92672">*</span>)event {  
+ [resultsField setStringValue:  
+ [NSString stringWithFormat:<span style="color:#e6db74">@&#34;Magnification value is %f&#34;</span>, [event magnification]]];  
+ NSSize newSize;  
+ newSize.height <span style="color:#f92672">=</span> self.frame.size.height <span style="color:#f92672">*</span> ([event magnification] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1.0</span>);  
+ newSize.width <span style="color:#f92672">=</span> self.frame.size.width <span style="color:#f92672">*</span> ([event magnification] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1.0</span>);  
+ [self setFrameSize:newSize];  
+} 
+</code></pre></div><p>但是在 10.5 上，NSEvent 沒有 magnification 這個 method，所以必須自己擴充，code 如下（<a href="https://svn.blender.org/svnroot/bf-blender/branches/render25/intern/ghost/intern/GHOST_SystemCocoa.mm">ref</a>）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objective-c" data-lang="objective-c"><span style="color:#75715e">#pragma mark defines for 10.6 api not documented in 10.5  
+</span><span style="color:#75715e">#ifndef MAC_OS_X_VERSION_10_6  
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">enum</span> {  
+ <span style="color:#75715e">/* The following event types are available on some hardware on 10.5.2 and later */</span>  
+ NSEventTypeGesture <span style="color:#f92672">=</span> <span style="color:#ae81ff">29</span>,  
+ NSEventTypeMagnify <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>,  
+ NSEventTypeSwipe <span style="color:#f92672">=</span> <span style="color:#ae81ff">31</span>,  
+ NSEventTypeRotate <span style="color:#f92672">=</span> <span style="color:#ae81ff">18</span>,  
+ NSEventTypeBeginGesture <span style="color:#f92672">=</span> <span style="color:#ae81ff">19</span>,  
+ NSEventTypeEndGesture <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>  
+};  
+  
+<span style="color:#66d9ef">@interface</span> <span style="color:#a6e22e">NSEvent</span>(GestureEvents)  
+<span style="color:#75715e">/* This message is valid for events of type NSEventTypeMagnify, on 10.5.2 or later */</span>  
+<span style="color:#75715e">#if MAC_OS_X_VERSION_MIN_REQUIRED   
+</span></code></pre></div><p>這段 code 也把 10.5 中 NSEvent 欠缺的 type id 補齊了，所以如果想要支援手勢操作，最好都把這段 code 貼上來用吧。</p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3>Contents</h3>
+            <nav id="TableOfContents"></nav>
+        </div>
+        
+        
+
+        
+
+
+        
+    </div>
+    <nav id="article-nav">
+    
+    <a href="/posts/2010-04-28-awakefromnib-initwithnibnamebundle/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            awakeFromNib 與 initWithNibName:bundle:
+        </div>
+    </a>
+    
+    
+    <a href="/posts/2010-02-07-iphoneipod-touchipad-flash/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">iPhone/iPod Touch/iPad 與 Flash 之間的恩怨情仇&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Shiva Huang Talks
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>

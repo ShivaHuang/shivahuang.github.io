@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>在 Mac 上使用 VTK // Shiva Huang Talks</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    
+    
+    
+
+        <meta property="og:title" content="在 Mac 上使用 VTK" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2007-12-11-mac-vtk/" />
+    
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
+    
+
+    <meta name="generator" content="Hugo 0.67.0" />
+</head>
+
+
+<body>
+<div id="container">
+    <header id="header">
+    <div id="header-outer" class="outer">
+        <div id="header-inner" class="inner">
+            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
+            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
+            <nav id="main-nav">
+                
+                <a class="main-nav-link" href="/tags/">Tags</a>
+                
+            </nav>
+            <nav id="sub-nav">
+                <div id="search-form-wrap">
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+    <section id="main" class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        <header class="article-header">
+            <h1 class="article-title" itemprop="name">在 Mac 上使用 VTK</h1>
+        </header>
+        
+        <div class="article-meta">
+            <a href="/posts/2007-12-11-mac-vtk/" class="article-date">
+                <time datetime='2007-12-11T16:35:00.000&#43;08:00' itemprop="datePublished">2007-12-11</time>
+            </a>
+            
+            
+            
+        </div>
+        <div class="article-entry" itemprop="articleBody">
+            <p><a href="http://www.vtk.org/">VTK</a> - Visualization Toolkit 是一套在醫學影像上不少人用的 Open Source 函式庫，因為課程需要所以前陣子找了要怎麼在 Mac 上使用的一些資料。</p>
+<p><a href="http://www.macresearch.org/installing_vtk_on_mac_os_x">Installing VTK on Mac OS X</a> - 教你怎麼在 Mac 上編譯並安裝 VTK。不過他是直接安裝，像我這種喜歡用套件管理系統的人，可能會比較喜歡用 <a href="http://www.finkproject.org/index.php">Fink</a> 來安裝。<br>
+幸運的是，Fink 中已經有了 VTK，只要啟用了 unstable 的套件之後就可以看到三個名為 vtk-py23/24/25 的套件，這三個套件都是 VTK，只是個別用來搭配 Python 2.3/2.4/2.5 罷了，選一個裝就可以了。不幸的是，VTK 本身有支援 Cocoa，但是預設是沒有開啟，而目前 Fink 套件樹中的也沒有打開這功能，而且他沒有包到目前最新的版本（5.0.3）。</p>
+<p>所以我根據 Fink 中 VTK 的設定檔，把 Cocoa 支援打開，包了 VTK-5.0.3，設定檔可以由此<a href="http://blog.lifestyle.idv.tw/uploaded_files/vtk-5.0.3-finkinfo.zip">下載</a>。下載之後的檔案是個 zip 檔，其中包含了三個檔案，把它們放到 {fink_path}/fink/dists/local/main/finkinfo 中，然後把 VTK-5.0.3 的原始碼（<a href="http://www.vtk.org/files/release/5.0/vtk-5.0.3.tar.gz">下載</a>）放到 {fink_path}/src 下，然後設定一下讓 Fink 去讀取本地的套件，應該就可以在套件樹中看到 vtk-py23/24/25 這三個套件，而且版本都是 5.0.3，最後下指令讓它編譯安裝（我是使用 Fink Commander 直接點選），等它編完安裝完就可以用了。</p>
+<p>想要玩的朋友請接著看以下三篇文章，應該就可以順利使用 Cocoa 搭配 VTK 使用了。<br>
+<a href="http://www.macresearch.org/cocoa_for_scientists_part_xiv_beginning_3d_visualization">Cocoa for Scientists (Part XIV): Beginning 3D Visualization - MacResearch</a><br>
+<a href="http://www.macresearch.org/cocoa_for_scientists_part_xv_continuing_3d_visualization">Cocoa for Scientists (Part XV): Continuing 3D Visualization - MacResearch</a><br>
+<a href="http://www.macresearch.org/cocoa_for_scientists_part_xvi_finalizing_3d_visualization">Cocoa for Scientists (Part XVI): Finalizing 3D Visualization - MacResearch</a></p>
+<p>最後附上我寫的作業畫面：</p>
+<p><a href="http://blog.lifestyle.idv.tw/uploaded_images/MIP_screenshot-703829.png"><img src="http://blog.lifestyle.idv.tw/uploaded_images/MIP_screenshot-703825.png" alt=""></a></p>
+
+        </div>
+
+        
+        
+        <div class="article-toc" >
+            <h3>Contents</h3>
+            <nav id="TableOfContents"></nav>
+        </div>
+        
+        
+
+        
+
+
+        
+    </div>
+    <nav id="article-nav">
+    
+    <a href="/posts/2007-12-13-cocoacast/" id="article-nav-newer" class="article-nav-link-wrap">
+        <div class="article-nav-title"><span>&lt;</span>&nbsp;
+            CocoaCast
+        </div>
+    </a>
+    
+    
+    <a href="/posts/2007-11-07-xcode-25-30/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">Xcode 2.5 &amp; 3.0 發表&nbsp;<span>&gt;</span></div>
+    </a>
+    
+</nav>
+
+</article>
+
+        
+    </section>
+    <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 Shiva Huang Talks
+            <br />
+            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
+        </div>
+    </div>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        <script>renderMathInElement(document.body);</script>
+    
+    <script>
+        document.getElementById('main-nav-toggle').addEventListener('click', function () {
+            var header = document.getElementById('header');
+            if (header.classList.contains('mobile-on')) {
+                header.classList.remove('mobile-on');
+            } else {
+                header.classList.add('mobile-on');
+            }
+        });
+    </script>
+</footer>
+
+</div>
+</body>
+</html>
