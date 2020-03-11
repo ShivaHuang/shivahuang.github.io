@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>調整 Raspberry Pi Swapfile 大小 // Shiva Huang Talks</title>
+    <title>在一台裝置上接收多個 Apple ID 的 2FA 認證 // Shiva Huang Talks</title>
 
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -10,11 +10,11 @@
     
     
 
-        <meta property="og:title" content="調整 Raspberry Pi Swapfile 大小" />
+        <meta property="og:title" content="在一台裝置上接收多個 Apple ID 的 2FA 認證" />
     <meta property="og:description" content="" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en" />
-    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2018-03-12-adjust-raspberry-pi-swapfile-size/" />
+    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/" />
     
 
     <link rel="shortcut icon" href="/favicon.ico">
@@ -54,34 +54,39 @@
     <div class="article-inner">
         
         <header class="article-header">
-            <h1 class="article-title" itemprop="name">調整 Raspberry Pi Swapfile 大小</h1>
+            <h1 class="article-title" itemprop="name">在一台裝置上接收多個 Apple ID 的 2FA 認證</h1>
         </header>
         
         <div class="article-meta">
-            <a href="/posts/2018-03-12-adjust-raspberry-pi-swapfile-size/" class="article-date">
-                <time datetime='2018-03-12T23:01:00.000&#43;08:00' itemprop="datePublished">2018-03-12</time>
+            <a href="/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/" class="article-date">
+                <time datetime='2020-03-10T17:46:33.000&#43;08:00' itemprop="datePublished">2020-03-10</time>
             </a>
             
             
             
             <div class="article-comment-link-wrap">
-                <a href="/posts/2018-03-12-adjust-raspberry-pi-swapfile-size/#disqus_thread" class="article-comment-link">Comments</a>
+                <a href="/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/#disqus_thread" class="article-comment-link">Comments</a>
             </div>
             
         </div>
         <div class="article-entry" itemprop="articleBody">
-            <p>最近試著在 Raspberry Pi 3 上編譯東西，結果遇到無法 alloc 虛擬記憶體的問題。</p>
-<pre><code>Virtual memory exhausted: Cannot allocate memory
-</code></pre><p>查了一下需要調整一下 swapfile 大小。
-Raspbian 的 swapfile 設定檔放在 <code>/etc/dphys-swapfile</code>，預設值是</p>
-<pre><code>CONF_SWAPSIZE=100
-</code></pre><p>代表 swapfile 是 100MB，在現在這時代實在是有點小。
-改成你要的大小後，重啟 service：</p>
-<pre><code>sudo /etc/init.d/dphys-swapfile stop
-sudo /etc/init.d/dphys-swapfile start
-</code></pre><p>然後可以用</p>
-<pre><code>free -m
-</code></pre><p>來檢查設定有沒有成功。</p>
+            <p>最近（其實已經有一段時間了&hellip;）在弄 Apple ID 2FA 的事情。</p>
+<p>Apple 從以前就鼓勵大家多申請幾個 Apple ID，結果現在強制要啟用 2FA 之後事情就變得很麻煩 - 你要生一堆裝置出來掛 2FA&hellip;</p>
+<p>不過被人找到解法，也不知道是不是 bug，反正我自己試是成功的。</p>
+<p>整個事情分兩階段，互相沒有相關性：</p>
+<ol>
+<li>啟用 2FA</li>
+</ol>
+<p>如果你的小帳已經啟用過 2FA，那就直接跳過這步。</p>
+<p>如果還沒啟用，Apple 啟用 2FA 必須要在 iOS 或 Mac 上用那個 Apple ID 登入 iCloud 才行。個人建議在 Mac 上暫時新建一個使用者，在這個使用者登入 iCloud 啟用 2FA。之後全部設定好之後直接把這個使用者刪掉就好。</p>
+<p>如果是在 iOS 上，就必須先把目前的 iCloud 帳號登出，然後 iCloud 會清理一堆東西，等全部設定完之後切回原本帳號時又要清理同步一堆東西，很麻煩。</p>
+<ol start="2">
+<li>登入 iCloud</li>
+</ol>
+<p>這邊就不管在 Mac 或 iOS 上都可以了，看你方便。</p>
+<p>Mac 在 <code>系統偏好設定</code> 裡，找到 <code>Internet 帳號</code> 這個項目（<strong>不是 iCloud</strong>），直接新增帳號，類型選 <code>iCloud</code>，登入 Apple ID 小帳，然後信箱通訊錄行事曆全部不要同步（我也不知道同步會發生什麼事，但是找到的文章是說不要同步）。</p>
+<p>iOS 在 <code>設定.app</code> 裡，找到 <code>密碼與帳號</code>（<strong>不是最上面的 iCloud</strong>），加入帳號，類型選 <code>iCloud</code>，登入 Apple ID 小帳，一樣不要同步任何東西。</p>
+<p>然後你就可以在這台裝置上收到兩個 Apple ID 的 2FA 了，可以到 Apple 網站登入測試一下，沒問題就可以把步驟 1 用到的帳號還原或砍掉了。</p>
 
         </div>
 
@@ -98,18 +103,23 @@ sudo /etc/init.d/dphys-swapfile start
 
 
         
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/apple-developer">Apple Developer
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
+        
     </div>
     <nav id="article-nav">
     
-    <a href="/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/" id="article-nav-newer" class="article-nav-link-wrap">
-        <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            在一台裝置上接收多個 Apple ID 的 2FA 認證
-        </div>
-    </a>
     
-    
-    <a href="/posts/2016-09-14-clean-up-xcode-old-garbage/" id="article-nav-older" class="article-nav-link-wrap">
-        <div class="article-nav-title">清理 Xcode 舊垃圾&nbsp;<span>&gt;</span></div>
+    <a href="/posts/2018-03-12-adjust-raspberry-pi-swapfile-size/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">調整 Raspberry Pi Swapfile 大小&nbsp;<span>&gt;</span></div>
     </a>
     
 </nav>

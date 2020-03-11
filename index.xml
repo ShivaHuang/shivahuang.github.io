@@ -6,10 +6,19 @@
     <description>Recent content on Shiva Huang Talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Mon, 12 Mar 2018 23:01:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 10 Mar 2020 17:46:33 +0800</lastBuildDate>
     
 	<atom:link href="https://shivahuang.cocoazen.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>在一台裝置上接收多個 Apple ID 的 2FA 認證</title>
+      <link>https://shivahuang.cocoazen.com/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/</link>
+      <pubDate>Tue, 10 Mar 2020 17:46:33 +0800</pubDate>
+      
+      <guid>https://shivahuang.cocoazen.com/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/</guid>
+      <description>最近（其實已經有一段時間了&amp;hellip;）在弄 Apple ID 2FA 的事情。 Apple 從以前就鼓勵大家多申請幾個 Apple ID，結果現在強制要啟用 2FA 之後事情就變得很麻煩 -</description>
+    </item>
     
     <item>
       <title>調整 Raspberry Pi Swapfile 大小</title>

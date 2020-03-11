@@ -3,13 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://shivahuang.cocoazen.com/tags/apple-developer/</loc>
+    <lastmod>2020-03-10T17:46:33+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://shivahuang.cocoazen.com/posts/</loc>
-    <lastmod>2018-03-12T23:01:00+08:00</lastmod>
+    <lastmod>2020-03-10T17:46:33+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://shivahuang.cocoazen.com/</loc>
-    <lastmod>2018-03-12T23:01:00+08:00</lastmod>
+    <lastmod>2020-03-10T17:46:33+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://shivahuang.cocoazen.com/tags/</loc>
+    <lastmod>2020-03-10T17:46:33+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://shivahuang.cocoazen.com/posts/2020-03-10-multiple-apple-id-2fa-on-one-device/</loc>
+    <lastmod>2020-03-10T17:46:33+08:00</lastmod>
   </url>
   
   <url>
@@ -29,11 +44,6 @@
   
   <url>
     <loc>https://shivahuang.cocoazen.com/tags/osx/</loc>
-    <lastmod>2016-04-08T12:39:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://shivahuang.cocoazen.com/tags/</loc>
     <lastmod>2016-04-08T12:39:00+08:00</lastmod>
   </url>
   
