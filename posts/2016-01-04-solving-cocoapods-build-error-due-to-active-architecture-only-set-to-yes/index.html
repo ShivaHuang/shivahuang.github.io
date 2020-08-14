@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.67.0" />
+    <meta name="generator" content="Hugo 0.74.3" />
 </head>
 
 
@@ -73,7 +73,7 @@
             <p>CocoaPods 很方便，不過它有個設定我實在搞不懂，就是預設會把 <code>Pods</code> project 的 <strong>Build Settings &gt; Build Active Architecture Only</strong> 在 <code>Debug</code> 模式下設為 <code>YES</code>，導致每次執行完 <code>pod install</code> 之後就會發生編譯錯誤，要手動把這個選項刪掉（回復預設值 <code>NO</code>）或直接改成 <code>NO</code> 才行。</p>
 <p>本來這種事其實也沒什麼，反正不是天天跑 <code>pod install</code>，但是久了還是很煩。找了一下網路，一般的解法是利用 <code>post_install</code> 這個 method，在裡面把每個 target 的 <code>Build Active Architecture Only</code> 設為 <code>NO</code>。</p>
 <p>在 <code>Podfile</code> 中加入下面這段：（Ref: <a href="http://samwize.com/2014/05/15/resolving-cocoapods-build-error-due-to-targets-building-for-only-active-architecture/">http://samwize.com/2014/05/15/resolving-cocoapods-build-error-due-to-targets-building-for-only-active-architecture/</a>）</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
 post_install <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>installer_representation<span style="color:#f92672">|</span>
     installer_representation<span style="color:#f92672">.</span>pods_project<span style="color:#f92672">.</span>targets<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>target<span style="color:#f92672">|</span>
         target<span style="color:#f92672">.</span>build_configurations<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>config<span style="color:#f92672">|</span>
@@ -82,7 +82,7 @@ post_install <span style="color:#66d9ef">do</span> <span style="color:#f92672">|
     <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
 </code></pre></div><p>不過這段是把 project 下的每個 target 中的 <code>Build Active Architecture Only</code> 設為 <code>NO</code>，事實上只要改 project 的設定，把 CocoaPods 自己加進去的 <code>Build Active Architecture Only = YES</code> 拿掉就可以了，所以修改如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Append to your Podfile</span>
 post_install <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>installer_representation<span style="color:#f92672">|</span>
     installer_representation<span style="color:#f92672">.</span>pods_project<span style="color:#f92672">.</span>build_configurations<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>configuration<span style="color:#f92672">|</span>
         configuration<span style="color:#f92672">.</span>build_settings<span style="color:#f92672">.</span>delete <span style="color:#e6db74">&#39;ONLY_ACTIVE_ARCH&#39;</span>

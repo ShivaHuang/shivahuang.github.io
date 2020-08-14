@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.67.0" />
+    <meta name="generator" content="Hugo 0.74.3" />
 </head>
 
 
@@ -72,9 +72,9 @@
         <div class="article-entry" itemprop="articleBody">
             <p>最近在Heroku上架了個Redmine，用來練習怎麼使用Heroku和Redmine。</p>
 <p>本來email設定是按照Redmine <a href="http://www.redmine.org/projects/redmine/wiki/EmailConfiguration">wiki</a>上教的在<code>config/configuration.yml</code>中設定如下</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">production:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#66d9ef">production</span>:
 <span style="color:#66d9ef">delivery_method</span>: :smtp
- smtp_settings:
+ <span style="color:#66d9ef">smtp_settings</span>:
     <span style="color:#66d9ef">address</span>: <span style="color:#e6db74">&#34;smtp.sendgrid.net&#34;</span>
     <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">587</span>
     <span style="color:#66d9ef">authentication</span>: :plain
@@ -83,15 +83,15 @@
     <span style="color:#66d9ef">password</span>: my_password 
 </code></pre></div><p>但如此一來就必須把帳號密碼加入git中，不然無法發佈到Heroku上，但是大家都千交代萬交代不要把密碼commit到版本控制系統中，這不是個好辦法。</p>
 <p>事實上，Heroku有提供設定<a href="https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application">環境變數</a>的功能，所以把<code>config/configuration.yml</code>改寫如下</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">production:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#66d9ef">production</span>:
   <span style="color:#66d9ef">delivery_method</span>: :smtp
-  smtp_settings:
+  <span style="color:#66d9ef">smtp_settings</span>:
     <span style="color:#66d9ef">address</span>: <span style="color:#e6db74">&#34;smtp.sendgrid.net&#34;</span>
     <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">587</span>
     <span style="color:#66d9ef">authentication</span>: :plain
     <span style="color:#66d9ef">domain</span>: <span style="color:#e6db74">&#34;heroku.com&#34;</span>
     <span style="color:#66d9ef">user_name</span>: &lt;%= ENV[<span style="color:#e6db74">&#39;SENDGRID_USERNAME&#39;</span>] %<span style="color:#e6db74">&gt;
-</span><span style="color:#e6db74">    password: &lt;%= ENV[&#39;SENDGRID_PASSWORD&#39;] %&gt;</span>
+</span><span style="color:#e6db74">    password: &lt;%= ENV[&#39;SENDGRID_PASSWORD&#39;] %&gt;</span>
 </code></pre></div><p>不過，不過這樣設定是不會動的&hellip;真正的設定法應該是不要用yml，改把設定寫在<code>config/environments/production.rb</code>裡</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">ActionMailer</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Base</span><span style="color:#f92672">.</span>smtp_settings <span style="color:#f92672">=</span> {
   <span style="color:#e6db74">:address</span>        <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;smtp.sendgrid.net&#39;</span>,
@@ -103,9 +103,9 @@
 }
 <span style="color:#66d9ef">ActionMailer</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Base</span><span style="color:#f92672">.</span>delivery_method <span style="color:#f92672">=</span> <span style="color:#e6db74">:smtp</span>
 </code></pre></div><p>並且把<code>config/configuration.yml</code>裡面的相關設定拿掉，大概改成下面這樣</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">default:
-  <span style="color:#75715e"># Outgoing emails configuration (see examples above)</span>
-  email_delivery:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#66d9ef">default</span>:
+  <span style="color:#75715e"># Outgoing emails configuration (see examples above)</span>
+  <span style="color:#66d9ef">email_delivery</span>:
     <span style="color:#66d9ef">delivery_method</span>: :smtp
 </code></pre></div><p>這樣應該就沒問題了。</p>
 

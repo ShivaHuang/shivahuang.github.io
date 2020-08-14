@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.67.0" />
+    <meta name="generator" content="Hugo 0.74.3" />
 </head>
 
 
@@ -71,7 +71,7 @@
         </div>
         <div class="article-entry" itemprop="articleBody">
             <p>Bootstrap 在 3 之前提供了一個叫做 <a href="http://getbootstrap.com/2.3.2/javascript.html#typeahead">Typeahead</a> 的元件，用途就是在輸入框中根據使用者目前的輸入，先到後台做查詢並且顯示可能的結果。不過這元件在 Bootstrap 3 被<a href="http://getbootstrap.com/getting-started/#migration-notes">拿掉</a>了，官方給的建議是改用 <a href="http://twitter.github.io/typeahead.js/">Twitter Typeahead</a>。</p>
-<h1 id="bootstrap-typeahead-">Bootstrap Typeahead</h1>
+<h1 id="bootstrap-typeahead">Bootstrap Typeahead</h1>
 <p>Bootstrap Typeahead 要提供候選資料的方式有兩種，一是靜態資料，可以寫在 HTML 中如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-HTML" data-lang="HTML">&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;span3&#34;</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;margin: 0 auto;&#34;</span> <span style="color:#a6e22e">data-provide</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;typeahead&#34;</span> <span style="color:#a6e22e">data-items</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;4&#34;</span> <span style="color:#a6e22e">data-source</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;[&#34;Alabama&#34;,&#34;Alaska&#34;,&#34;Arizona&#34;]&#39;</span>&gt;
 </code></pre></div><p>或者在 JavaScript 中指定：</p>
@@ -113,7 +113,7 @@
             }
 }
 </code></pre></div><p>老實說這用法有點複雜&hellip;</p>
-<h1 id="twitter-typeahead-">Twitter Typeahead</h1>
+<h1 id="twitter-typeahead">Twitter Typeahead</h1>
 <p>要換成 Twitter Typeahead 其實相當簡單，首先在網頁上匯入 <code>typeahead.js</code>，接著一樣用 <code>$('.ajax-typeahead').typeahead()</code> 的方法呼叫，只是指定候選資料的方式不太一樣。Twitter Typeahead 指定候選資料的參數有三種：</p>
 <ol>
 <li><code>local</code>：直接寫在網頁中，是個字串陣列</li>

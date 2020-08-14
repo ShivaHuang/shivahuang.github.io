@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
     
 
-    <meta name="generator" content="Hugo 0.67.0" />
+    <meta name="generator" content="Hugo 0.74.3" />
 </head>
 
 
@@ -72,23 +72,23 @@
         <div class="article-entry" itemprop="articleBody">
             <p>最近硬碟空間越來越少，因為沒有放任何音樂影片照片，空間吃緊的元兇就是 Xcode 的眾多衍生資料了。</p>
 <p>整理一下可以清除的檔案：</p>
-<h2 id="device-support-">Device Support</h2>
+<h2 id="device-support">Device Support</h2>
 <ul>
 <li><code>~/Library/Developer/Xcode/iOS DeviceSupport</code></li>
 <li><code>~/Library/Developer/Xcode/watchOS DeviceSupport</code></li>
 </ul>
 <p>這個目錄下放的是每個 iOS / watchOS symbolicate crash logs 的資訊，每個版本會有一個獨立的目錄，資料很大，以 iOS 來說至少會有 2G 以上。每次接上 iOS 裝置的時候，如果沒有對應版本的資訊就會自動下載。可以把只留主力開發機的版本就好，有需要的時候 Xcode 會自己下載。</p>
-<h2 id="document-">Document</h2>
+<h2 id="document">Document</h2>
 <ul>
 <li><code>~/Library/Developer/Shared/Documentation</code></li>
 </ul>
 <p>這邊放的是文件檔，包含了 macOS 跟 iOS 的文件，其實都可以刪掉。</p>
-<h2 id="download-cache-">Download Cache</h2>
+<h2 id="download-cache">Download Cache</h2>
 <ul>
 <li><code>~/Library/Caches/com.apple.dt.Xcode/Downloads</code></li>
 </ul>
 <p>這邊放的是下載的 cache，例如 iOS Simulator 的安裝 dmg 之類的，大小約是幾百 MB ~ GB 等級。</p>
-<h2 id="simulator-">Simulator</h2>
+<h2 id="simulator">Simulator</h2>
 <ul>
 <li><code>/Library/Developer/CoreSimulator/Profiles/Runtimes</code></li>
 </ul>
@@ -96,6 +96,10 @@
 <p>順帶一題，Xcode 的 <code>Devices</code> 管理那邊刪除的只是模擬器的設定檔及對應的檔案結構，兩者的關聯類似 Class 與 Instance。</p>
 <hr>
 <p>個人經驗是，把這些東西清掉後我的硬碟多了 10G 左右的空間&hellip;</p>
+<hr>
+<h2 id="後記--20200814">後記 @ 2020/08/14</h2>
+<p>後來有人在 App Store 上架了一個工具叫 DevCleaner 可以一鍵清除舊資料，建議可以用這個定期清理一下。</p>
+<p><a href="https://apps.apple.com/tw/app/devcleaner-for-xcode/id1388020431?l=en&amp;mt=12">https://apps.apple.com/tw/app/devcleaner-for-xcode/id1388020431?l=en&amp;mt=12</a></p>
 
         </div>
 
@@ -105,10 +109,11 @@
             <h3>Contents</h3>
             <nav id="TableOfContents">
   <ul>
-    <li><a href="#device-support-">Device Support</a></li>
-    <li><a href="#document-">Document</a></li>
-    <li><a href="#download-cache-">Download Cache</a></li>
-    <li><a href="#simulator-">Simulator</a></li>
+    <li><a href="#device-support">Device Support</a></li>
+    <li><a href="#document">Document</a></li>
+    <li><a href="#download-cache">Download Cache</a></li>
+    <li><a href="#simulator">Simulator</a></li>
+    <li><a href="#後記--20200814">後記 @ 2020/08/14</a></li>
   </ul>
 </nav>
         </div>
@@ -118,6 +123,17 @@
         
 
 
+        
+        <footer class="article-footer">
+            <ul class="article-tag-list">
+                
+                <li class="article-tag-list-item">
+                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/apple-developer">Apple Developer
+                    </a>
+                </li>
+                
+            </ul>
+        </footer>
         
     </div>
     <nav id="article-nav">
