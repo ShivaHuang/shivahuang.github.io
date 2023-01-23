@@ -1,227 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>重整 Git repo 中的階層關係 // Shiva Huang Talks</title>
-
-    <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    
-    
-    
-
-        <meta property="og:title" content="重整 Git repo 中的階層關係" />
-    <meta property="og:description" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="en" />
-    <meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/" />
-    
-
-    <link rel="shortcut icon" href="/favicon.ico">
-
-    <link href="https://shivahuang.cocoazen.com/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
-    <link href="https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
-
-    <link rel="stylesheet" href="https://shivahuang.cocoazen.com/css/style.css">
-    
-
-    <meta name="generator" content="Hugo 0.74.3" />
-</head>
-
-
-<body>
-<div id="container">
-    <header id="header">
-    <div id="header-outer" class="outer">
-        <div id="header-inner" class="inner">
-            <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
-            <a id="logo" class="logo-text" href="https://shivahuang.cocoazen.com/">Shiva Huang Talks</a>
-            <nav id="main-nav">
-                
-                <a class="main-nav-link" href="/tags/">Tags</a>
-                
-            </nav>
-            <nav id="sub-nav">
-                <div id="search-form-wrap">
-                </div>
-            </nav>
-        </div>
-    </div>
-</header>
-
-    <section id="main" class="outer">
-        <article class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        <header class="article-header">
-            <h1 class="article-title" itemprop="name">重整 Git repo 中的階層關係</h1>
-        </header>
-        
-        <div class="article-meta">
-            <a href="/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/" class="article-date">
-                <time datetime='2014-01-28T14:45:00.000&#43;08:00' itemprop="datePublished">2014-01-28</time>
-            </a>
-            
-            
-            
-            <div class="article-comment-link-wrap">
-                <a href="/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/#disqus_thread" class="article-comment-link">Comments</a>
-            </div>
-            
-        </div>
-        <div class="article-entry" itemprop="articleBody">
-            <p>一般來說，我們會把專案擺成下面這樣子：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">	Projects/
-		Proj1/
-			.git/
-			proj1_readme.md
-</code></pre></div><p>CVT2HUGO: &gt; ls -la</p>
-<p>就是很單純的有個 <code>Projects</code> 目錄，裡面放著所有的專案，然後把 <code>Proj1</code> 做成 git repo。</p>
-<p>隨著時間過去，可能會另外有個相關的專案叫 <code>Proj2</code>，然後放置的方式就會像這樣：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">	Projects/
-		Proj1/
-			.git/
-			proj1_readme.md
-		Proj2/
-			proj2_readme.md
-</code></pre></div><p>CVT2HUGO: &gt; ls -la</p>
-<p>但是這樣 <code>Proj2</code> 就不在 git 控制之下了。這時可以另外弄個 <code>Proj2</code> 的 repo，或者想辦法整理成下面這種階層：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">	Projects/
-		FullProject/
-			.git/
-			Proj1/
-				proj1_readme.md
-			Proj2/
-				proj2_readme.md
-</code></pre></div><p>CVT2HUGO: &gt; ls -la</p>
-<p>邏輯上就像是，把 repo root 上提一層，然後把 Proj2 加進來。不過換個角度想，其實就是把舊的 <code>Proj1</code> 所有的檔案放到更下一層目錄，然後把 <code>Proj2</code> 加到 repo root，最好再把 repo 名字改掉。</p>
-<p>所以想要做的事情就是：</p>
-<ol>
-<li>把原本 <code>Proj1</code> 下的所有檔案，放到更低一層目錄中</li>
-<li>在 repo 第一層多加個 <code>Proj2</code></li>
-<li>repo 目錄改名為 <code>FullProject</code></li>
-</ol>
-<p>其實還蠻簡單的。因為 git 會在 repo 的 root 放置 <code>.git/</code> 這個目錄，反過來說，只要把 <code>.git/</code> 這個目錄移到任何地方去，那邊都會被當成 repo 的 root，而且實際的目錄名稱一點都不重要。因此整個流程如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Projects$ mv Proj1 FullProject
-Projects$ mkdir FullProject/Proj1
-Projects$ cd FullProject
-FullProject$ git mv &lt;all files&gt; Proj1
-FullProject$ git commit -a -m <span style="color:#e6db74">&#34;Move files to new directory&#34;</span>
-FullProject$ mv ../Proj2 .
-FullProject$ git add Proj2
-FullProject$ git commit -a -m <span style="color:#e6db74">&#34;Add Proj2 to this repo&#34;</span>
-</code></pre></div><p>寫完之後發現，其實還蠻簡單的嘛&hellip;</p>
-
-        </div>
-
-        
-        
-        <div class="article-toc" >
-            <h3>Contents</h3>
-            <nav id="TableOfContents"></nav>
-        </div>
-        
-        
-
-        
-
-
-        
-        <footer class="article-footer">
-            <ul class="article-tag-list">
-                
-                <li class="article-tag-list-item">
-                    <a class="article-tag-list-link" href="https://shivahuang.cocoazen.com//tags/git">git
-                    </a>
-                </li>
-                
-            </ul>
-        </footer>
-        
-    </div>
-    <nav id="article-nav">
-    
-    <a href="/posts/2014-07-01-protect-api-key-in-git-repo/" id="article-nav-newer" class="article-nav-link-wrap">
-        <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            在 git repo 中保護 API Key 的方法
-        </div>
-    </a>
-    
-    
-    <a href="/posts/2013-11-22-sql-formatter/" id="article-nav-older" class="article-nav-link-wrap">
-        <div class="article-nav-title">SQL formatter&nbsp;<span>&gt;</span></div>
-    </a>
-    
-</nav>
-
-</article>
-
-        
-            <div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "shivahuangtalks" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        
-    </section>
-    <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2020 Shiva Huang Talks
-            <br />
-            Powered by <a href="https://gohugo.io" target="_blank">Hugo</a> with theme <a href="https://github.com/carsonip/hugo-theme-minos" target="_blank">Minos</a>
-        </div>
-    </div>
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-45958439-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css" integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
-        <script>renderMathInElement(document.body);</script>
-    
-    <script>
-        document.getElementById('main-nav-toggle').addEventListener('click', function () {
-            var header = document.getElementById('header');
-            if (header.classList.contains('mobile-on')) {
-                header.classList.remove('mobile-on');
-            } else {
-                header.classList.add('mobile-on');
-            }
-        });
-    </script>
-</footer>
-
-</div>
-</body>
-</html>
+<!doctype html><html><head><title>重整 Git repo 中的階層關係 // Shiva Huang Talks</title><meta charset=utf-8><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta property="og:title" content="重整 Git repo 中的階層關係"><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:locale" content="en"><meta property="og:url" content="https://shivahuang.cocoazen.com/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/"><link rel="shortcut icon" href=/favicon.ico><link href=https://shivahuang.cocoazen.com/webfonts/ptserif/main.css rel=stylesheet type=text/css><link href=https://shivahuang.cocoazen.com/webfonts/source-code-pro/main.css rel=stylesheet type=text/css><link rel=stylesheet href=https://shivahuang.cocoazen.com/css/style.css><meta name=generator content="Hugo 0.110.0"></head><body><div id=container><header id=header><div id=header-outer class=outer><div id=header-inner class=inner><a id=main-nav-toggle class=nav-icon href=javascript:;></a>
+<a id=logo class=logo-text href=https://shivahuang.cocoazen.com/>Shiva Huang Talks</a><nav id=main-nav><a class=main-nav-link href=/tags/>Tags</a></nav><nav id=sub-nav><div id=search-form-wrap></div></nav></div></div></header><section id=main class=outer><article class="article article-type-post" itemscope itemprop=blogPost><div class=article-inner><header class=article-header><h1 class=article-title itemprop=name>重整 Git repo 中的階層關係</h1></header><div class=article-meta><a href=/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/ class=article-date><time datetime=2014-01-28T14:45:00.000+08:00 itemprop=datePublished>2014-01-28</time></a><div class=article-comment-link-wrap><a href=/posts/2014-01-28-reorganize-hierarchy-level-in-git-repo/#disqus_thread class=article-comment-link>Comments</a></div></div><div class=article-entry itemprop=articleBody><p>一般來說，我們會把專案擺成下面這樣子：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>	Projects/
+</span></span><span style=display:flex><span>		Proj1/
+</span></span><span style=display:flex><span>			.git/
+</span></span><span style=display:flex><span>			proj1_readme.md
+</span></span></code></pre></div><p>CVT2HUGO: > ls -la</p><p>就是很單純的有個 <code>Projects</code> 目錄，裡面放著所有的專案，然後把 <code>Proj1</code> 做成 git repo。</p><p>隨著時間過去，可能會另外有個相關的專案叫 <code>Proj2</code>，然後放置的方式就會像這樣：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>	Projects/
+</span></span><span style=display:flex><span>		Proj1/
+</span></span><span style=display:flex><span>			.git/
+</span></span><span style=display:flex><span>			proj1_readme.md
+</span></span><span style=display:flex><span>		Proj2/
+</span></span><span style=display:flex><span>			proj2_readme.md
+</span></span></code></pre></div><p>CVT2HUGO: > ls -la</p><p>但是這樣 <code>Proj2</code> 就不在 git 控制之下了。這時可以另外弄個 <code>Proj2</code> 的 repo，或者想辦法整理成下面這種階層：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>	Projects/
+</span></span><span style=display:flex><span>		FullProject/
+</span></span><span style=display:flex><span>			.git/
+</span></span><span style=display:flex><span>			Proj1/
+</span></span><span style=display:flex><span>				proj1_readme.md
+</span></span><span style=display:flex><span>			Proj2/
+</span></span><span style=display:flex><span>				proj2_readme.md
+</span></span></code></pre></div><p>CVT2HUGO: > ls -la</p><p>邏輯上就像是，把 repo root 上提一層，然後把 Proj2 加進來。不過換個角度想，其實就是把舊的 <code>Proj1</code> 所有的檔案放到更下一層目錄，然後把 <code>Proj2</code> 加到 repo root，最好再把 repo 名字改掉。</p><p>所以想要做的事情就是：</p><ol><li>把原本 <code>Proj1</code> 下的所有檔案，放到更低一層目錄中</li><li>在 repo 第一層多加個 <code>Proj2</code></li><li>repo 目錄改名為 <code>FullProject</code></li></ol><p>其實還蠻簡單的。因為 git 會在 repo 的 root 放置 <code>.git/</code> 這個目錄，反過來說，只要把 <code>.git/</code> 這個目錄移到任何地方去，那邊都會被當成 repo 的 root，而且實際的目錄名稱一點都不重要。因此整個流程如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Projects$ mv Proj1 FullProject
+</span></span><span style=display:flex><span>Projects$ mkdir FullProject/Proj1
+</span></span><span style=display:flex><span>Projects$ cd FullProject
+</span></span><span style=display:flex><span>FullProject$ git mv &lt;all files&gt; Proj1
+</span></span><span style=display:flex><span>FullProject$ git commit -a -m <span style=color:#e6db74>&#34;Move files to new directory&#34;</span>
+</span></span><span style=display:flex><span>FullProject$ mv ../Proj2 .
+</span></span><span style=display:flex><span>FullProject$ git add Proj2
+</span></span><span style=display:flex><span>FullProject$ git commit -a -m <span style=color:#e6db74>&#34;Add Proj2 to this repo&#34;</span>
+</span></span></code></pre></div><p>寫完之後發現，其實還蠻簡單的嘛&mldr;</p></div><div class=article-toc><h3>Contents</h3><nav id=TableOfContents></nav></div><footer class=article-footer><ul class=article-tag-list><li class=article-tag-list-item><a class=article-tag-list-link href=https://shivahuang.cocoazen.com/tags/git>git</a></li></ul></footer></div><nav id=article-nav><a href=/posts/2014-07-01-protect-api-key-in-git-repo/ id=article-nav-newer class=article-nav-link-wrap><div class=article-nav-title><span>&lt;</span>&nbsp;
+在 git repo 中保護 API Key 的方法</div></a><a href=/posts/2013-11-22-sql-formatter/ id=article-nav-older class=article-nav-link-wrap><div class=article-nav-title>SQL formatter&nbsp;<span>></span></div></a></nav></article><div id=disqus_thread></div><script type=application/javascript>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//shivahuangtalks.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></section><footer id=footer><div class=outer><div id=footer-info class=inner>&copy; 2023 Shiva Huang Talks<br>Powered by <a href=https://gohugo.io target=_blank>Hugo</a> with theme <a href=https://github.com/carsonip/hugo-theme-minos target=_blank>Minos</a></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-45958439-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/tomorrow-night.min.css integrity="sha256-2wL88NKUqvJi/ExflDzkzUumjUM73mcK2gBvBBeLvTk=" crossorigin=anonymous><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin=anonymous></script>
+<script>hljs.initHighlightingOnLoad()</script><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css integrity=sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0 crossorigin=anonymous><script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js integrity=sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1 crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin=anonymous></script>
+<script>renderMathInElement(document.body)</script><script>document.getElementById("main-nav-toggle").addEventListener("click",function(){var e=document.getElementById("header");e.classList.contains("mobile-on")?e.classList.remove("mobile-on"):e.classList.add("mobile-on")})</script></footer></div></body></html>
