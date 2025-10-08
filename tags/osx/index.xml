@@ -1,1 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OSX on Shiva Huang Talks</title><link>https://shivahuang.cocoazen.com/tags/osx/</link><description>Recent content in OSX on Shiva Huang Talks</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 08 Apr 2016 12:39:00 +0800</lastBuildDate><atom:link href="https://shivahuang.cocoazen.com/tags/osx/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac OSX 的 PATH 設定與 path_helper</title><link>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</link><pubDate>Fri, 08 Apr 2016 12:39:00 +0800</pubDate><guid>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</guid><description>這兩天幫一台舊機器升級開發環境，包含了 rvm，homebrew 等，在用 brew doctor 想確認一下有沒有什麼問題的時候，跳出了一個警告如下： Warning: /usr/bin occurs before /usr/local/bin This means</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OSX on Shiva Huang Talks</title><link>https://shivahuang.cocoazen.com/tags/osx/</link><description>Recent content in OSX on Shiva Huang Talks</description><generator>Hugo</generator><language>zh-tw</language><lastBuildDate>Fri, 08 Apr 2016 12:39:00 +0800</lastBuildDate><atom:link href="https://shivahuang.cocoazen.com/tags/osx/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac OSX 的 PATH 設定與 path_helper</title><link>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</link><pubDate>Fri, 08 Apr 2016 12:39:00 +0800</pubDate><guid>https://shivahuang.cocoazen.com/posts/2016-04-08-path-configure-and-path-helper-on-mac-osx/</guid><description>&lt;p&gt;這兩天幫一台舊機器升級開發環境，包含了 rvm，homebrew 等，在用 &lt;code&gt;brew doctor&lt;/code&gt; 想確認一下有沒有什麼問題的時候，跳出了一個警告如下：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Warning: /usr/bin occurs before /usr/local/bin
+This means that system-provided programs will be used instead of those
+provided by Homebrew. The following tools exist at both paths:
+ git
+ git-cvsserver
+ git-receive-pack
+ git-shell
+ git-upload-archive
+ git-upload-pack
+
+Consider setting your PATH so that /usr/local/bin
+occurs before /usr/bin. Here is a one-liner:
+ echo &amp;#39;export PATH=&amp;#34;/usr/local/bin:$PATH&amp;#34;&amp;#39; &amp;gt;&amp;gt; ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;簡單說就是在我的 &lt;code&gt;PATH&lt;/code&gt; 環境變數中，&lt;code&gt;/usr/local/bin&lt;/code&gt; 被放到 &lt;code&gt;/usr/bin&lt;/code&gt; 之後，所以我另外安裝的新版工具不會被呼叫到，而是會執行到系統自己帶的舊版工具。&lt;/p&gt;</description></item></channel></rss>
